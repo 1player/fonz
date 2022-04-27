@@ -1,6 +1,6 @@
 require "./recipe"
 
-REPO_PATH = "repo.yml"
+REPO_PATH = "example-repo.yml"
 
 private def fuzzy_name_matches?(name, query)
   name.downcase.includes?(query.downcase)
@@ -23,5 +23,16 @@ class Repo
     @recipes
       .select { |recipe| fuzzy_name_matches?(recipe.name, query) }
       .sort { |a, b| a.name <=> b.name }
+  end
+
+  def find_one_exact(name)
+    match = @recipes.select do |recipe|
+      name.downcase == recipe.name.downcase
+    end
+    if match.size == 1
+      match[0]
+    else
+      nil
+    end
   end
 end

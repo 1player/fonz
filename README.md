@@ -3,9 +3,8 @@ Also, the last implied step of the pipeline is running a `find . -name *.otf`" (
 
 # TODO
 
-- [x] fancy search <font>
-- [ ] fancy update
-- [ ] fancy install <font>
-- [ ] fancy remove <font>
-- [ ] fancy list
-- [ ] fancy list --installed
+- [x] Search a font by name
+- [ ] github-release source implementation
+- [ ] Install a font from YAML recipe
+- [ ] Install a font by name
+- [ ] Host the repository on a github project

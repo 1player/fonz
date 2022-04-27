@@ -1,0 +1,6 @@
+name: Iosevka
+source:
+  type: github-release
+  repo: be5invis/Iosevka
+  asset: super-ttc-iosevka-$RELEASEVERSION.zip
+format: ttc

@@ -2,10 +2,27 @@ require "option_parser"
 require "yaml"
 require "./repo"
 
-private def read_index_choice : UInt32?
-  printf "Confirm choice: "
-  n = (gets || "").to_u32?
-  n && n < 1 ? nil : n
+private def install_command(name)
+  recipe =
+    if name =~ %r(/)
+      if File.exists?(name)
+        File.open(name) do |file|
+          Recipe.from_yaml(file)
+        end
+      else
+        puts "#{name}: No such file or directory."
+        exit 1
+      end
+    else
+      if match = Repo.new.find_one_exact(name)
+        match
+      else
+        puts "No font named '#{name}' found."
+        exit 1
+      end
+    end
+
+  recipe.install()
 end
 
 private def search_command(query)
@@ -17,27 +34,39 @@ private def search_command(query)
     exit 1
   else
     matches.each_with_index 1 do |recipe, i|
-      puts "##{i}: #{recipe.name}"
-    end
-    if (i = read_index_choice()) && (recipe = matches[i - 1]?)
-      recipe.install
+      puts "#{recipe.name}"
     end
   end
 end
 
+##
 
 OptionParser.parse() do |parser|
-  parser.banner = "usage: fancy <command>"
+  parser.banner = "usage: fancy <command>\n"
   parser.on("-h", "--help", "Show this help") do
     STDERR.puts parser
     exit 1
   end
+  parser.on("install", "Install a font") do
+    parser.banner = <<-EOF
+    usage:
+      fancy install <font name> [options]   - Install a font by name
+      OR
+      fancy install <recipe.yaml> [options] - Install a font from YAML recipe
+
+    EOF
+    parser.unknown_args do |args, _|
+      if args.size > 0
+        name = args[0..].join(" ")
+        install_command(name)
+      else
+        STDERR.puts parser
+        exit 1
+      end
+    end
+  end
   parser.on("search", "Search a font by name") do
-    parser.banner = "usage: fancy search <query> [options]"
-    # opts = {:refresh => false}
-    # parser.on("--refresh", "Force repository refresh") do
-    #   opts[:refresh] = true
-    # end
+    parser.banner = "usage: fancy search <query> [options]\n"
     parser.unknown_args do |args, _|
       if args.size > 0
         query = args[0..].join(" ")
