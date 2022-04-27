@@ -1,0 +1,56 @@
+- name: Iosevka
+  source:
+    type: github-release
+    repo: be5invis/Iosevka
+    asset: super-ttc-iosevka-$RELEASEVERSION.zip
+  format: ttc
+
+- name: Victor Mono
+  source:
+    type: github-release
+    repo: rubjo/victor-mono
+  format: otf
+  script: |
+    cd public
+    unzip Victor\ Mono.zip
+
+- name: Inter
+  source:
+    type: github-release
+    repo: rsms/inter
+    asset: inter-$RELEASEVERSION.zip
+  format: otf
+  script: |
+    cd Inter\ Desktop
+
+- name: Inconsolata
+  source:
+    type: github-release
+    repo: googlefonts/Inconsolata
+    asset: fonts_otf.zip
+  format: otf
+  script: |
+    cd fonts/otf
+
+- name: Fantasque Sans Mono
+  source:
+    type: github-release
+    repo: belluzj/fantasque-sans
+    asset: FantasqueSansMono-Normal.zip
+  type: otf
+  pipeline:
+    - cd "OTF"
+
+- name: Ubuntu
+  source:
+    type: github-release
+    repo: daltonmaag/ubuntu
+    asset: ubuntu-font-family-$RELEASEVERSION.zip
+  type: ttf
+
+- name: IBM Plex
+  source:
+    type: github-release
+    repo: IBM/plex
+    asset: OpenType.zip
+  type: otf
