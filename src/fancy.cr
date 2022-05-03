@@ -1,5 +1,6 @@
 require "option_parser"
 require "yaml"
+require "./installer"
 require "./repo"
 
 private def install_command(name)
@@ -22,7 +23,7 @@ private def install_command(name)
       end
     end
 
-  recipe.install()
+  Installer.new.install(recipe)
 end
 
 private def search_command(query)
