@@ -1,15 +1,38 @@
 require "http/client"
 require "mime"
+require "process"
 
 MIME.init()
 
 module Utils
   extend self
 
+  enum ArchiveType
+    #Tarball
+    Zip
+  end
+
   def filename_from_content_disposition(cd)
     if cd =~ /^attachment; filename=(.*)$/i
       $~[1]
     end
+  end
+
+  def archive_type(filename)
+    # if filename =~ /\.tar\.\w+$/
+    #   ArchiveType::Tarball
+    # elsif MIME.from_filename(filename) == "application/zip"
+    #   ArchiveType::Zip
+    # else
+    #   raise "#{filename}: unknown archive type"
+    # end
+
+    if MIME.from_filename(filename) == "application/zip"
+      ArchiveType::Zip
+    else
+      raise "#{filename}: unknown archive type"
+    end
+
   end
 
   def download_file(url, dir = Dir.tempdir)
@@ -35,8 +58,22 @@ module Utils
           IO.copy(resp.body_io, f)
         end
 
-        path
+        path.to_s
       end
+    end
+  end
+
+  def unpack(file, dir)
+    case archive_type(file)
+    in ArchiveType::Zip
+      unpack_zip(file, dir)
+    end
+  end
+
+  def unpack_zip(file, dir)
+    p = Process.run("unzip", [ "-d", dir, file ])
+    unless p.success?
+      raise "Unpacking #{file} failed with status code ${p.exit_status}"
     end
   end
 end

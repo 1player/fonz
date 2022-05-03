@@ -2,7 +2,7 @@
   source:
     type: github-release
     repo: be5invis/Iosevka
-    asset: super-ttc-iosevka-$RELEASEVERSION.zip
+    asset: super-ttc-iosevka-$VERSION.zip
   format: ttc
 
 - name: Victor Mono
@@ -18,7 +18,7 @@
   source:
     type: github-release
     repo: rsms/inter
-    asset: inter-$RELEASEVERSION.zip
+    asset: inter-$VERSION.zip
   format: otf
   script: |
     cd Inter\ Desktop
@@ -37,7 +37,7 @@
     type: github-release
     repo: belluzj/fantasque-sans
     asset: FantasqueSansMono-Normal.zip
-  type: otf
+  format: otf
   pipeline:
     - cd "OTF"
 
@@ -45,12 +45,12 @@
   source:
     type: github-release
     repo: daltonmaag/ubuntu
-    asset: ubuntu-font-family-$RELEASEVERSION.zip
-  type: ttf
+    asset: ubuntu-font-family-$VERSION.zip
+  format: ttf
 
 - name: IBM Plex
   source:
     type: github-release
     repo: IBM/plex
     asset: OpenType.zip
-  type: otf
+  format: otf
