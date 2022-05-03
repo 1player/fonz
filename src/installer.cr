@@ -19,20 +19,11 @@ class Installer
   end
 
   def archive_type(filename)
-    # if filename =~ /\.tar\.\w+$/
-    #   ArchiveType::Tarball
-    # elsif MIME.from_filename(filename) == "application/zip"
-    #   ArchiveType::Zip
-    # else
-    #   raise "#{filename}: unknown archive type"
-    # end
-
     if MIME.from_filename(filename) == "application/zip"
       ArchiveType::Zip
     else
       raise "#{filename}: unknown archive type"
     end
-
   end
 
   def download_file(url, dir = Dir.tempdir)
@@ -131,7 +122,7 @@ class Installer
         dest_path = Path.new(dest_dir, path)
 
         puts "Installing #{dest_path}..."
-        File.copy(file, dest_path)
+        FileUtils.mv(file, dest_path)
       end
     end
   end
