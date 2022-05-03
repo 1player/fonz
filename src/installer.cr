@@ -3,6 +3,7 @@ require "http/client"
 require "mime"
 require "process"
 require "./recipe"
+require "./utils"
 
 MIME.init()
 
@@ -109,8 +110,7 @@ class Installer
       end
 
       # 5. Install files
-      fonts_dir = Path["~/.local/share/fonts"].expand(home: true)
-      dest_dir = Path.new(fonts_dir, "fancy", recipe.name)
+      dest_dir = Path.new(Utils.user_fonts_directory, "fancy", recipe.name)
       Dir.mkdir_p(dest_dir)
 
       font_files.each do |file|
