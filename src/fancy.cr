@@ -3,7 +3,7 @@ require "yaml"
 require "./installer"
 require "./repo"
 
-private def install_command(name)
+private def install_command(name, *, dry_run = false)
   recipe =
     if name =~ %r(/)
       if File.exists?(name)
@@ -23,7 +23,7 @@ private def install_command(name)
       end
     end
 
-  Installer.new.install(recipe)
+  Installer.new.install(recipe, dry_run: dry_run)
 end
 
 private def search_command(query)
@@ -52,6 +52,7 @@ OptionParser.parse() do |parser|
     Repo.refresh
   end
   parser.on("install", "Install a font") do
+    dry_run = false
     parser.banner = <<-EOF
     usage:
       fancy install <font name> [options]   - Install a font by name
@@ -59,10 +60,13 @@ OptionParser.parse() do |parser|
       fancy install <recipe.yaml> [options] - Install a font from YAML recipe
 
     EOF
+    parser.on("-n", "--dry-run", "Perform trial installation with no changes made") do
+      dry_run = true
+    end
     parser.unknown_args do |args, _|
       if args.size > 0
         name = args[0..].join(" ")
-        install_command(name)
+        install_command(name, dry_run: dry_run)
       else
         STDERR.puts parser
         exit 1

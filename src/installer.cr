@@ -67,7 +67,7 @@ class Installer
     end
   end
 
-  def install(recipe : Recipe)
+  def install(recipe : Recipe, *, dry_run = false)
     with_tempdir do |temp_dir|
       # 1. Download file
       download_url = recipe.source.download_url().not_nil!
@@ -94,18 +94,18 @@ class Installer
 
       # 5. Install files
       dest_dir = Path.new(Utils.user_fonts_directory, "fancy", recipe.name)
-      Dir.mkdir_p(dest_dir)
+      Dir.mkdir_p(dest_dir) unless dry_run
 
       font_files.each do |file|
         path = Path.new(file).relative_to?(temp_dir).not_nil!
         dir_component = path.dirname
         if dir_component
-          Dir.mkdir_p(Path.new(dest_dir, dir_component))
+          Dir.mkdir_p(Path.new(dest_dir, dir_component)) unless dry_run
         end
         dest_path = Path.new(dest_dir, path)
 
         puts "Installing #{dest_path}..."
-        FileUtils.mv(file, dest_path)
+        FileUtils.mv(file, dest_path) unless dry_run
       end
     end
   end
