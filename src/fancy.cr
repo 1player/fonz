@@ -48,6 +48,9 @@ OptionParser.parse() do |parser|
     STDERR.puts parser
     exit 1
   end
+  parser.on("--refresh", "Force update of the font repository") do
+    Repo.refresh
+  end
   parser.on("install", "Install a font") do
     parser.banner = <<-EOF
     usage:
