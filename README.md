@@ -6,5 +6,5 @@
 - [X] Install a font by name
 - [ ] Abort if font is already installed
 - [ ] Handle font postprocess script
-- [ ] Handle .tar.gz archives
+- [X] Handle .tar.gz archives
 - [X] Host the repository on a github project

@@ -9,30 +9,40 @@ MIME.init()
 
 class Installer
   enum ArchiveType
-    #Tarball
+    Tarball
     Zip
   end
 
   def archive_type(filename)
     if MIME.from_filename(filename) == "application/zip"
       ArchiveType::Zip
+    elsif filename =~ /\.tar.\w+$/ || filename =~ /\.tgz$/
+      ArchiveType::Tarball
     else
       raise "#{filename}: unknown archive type"
     end
   end
 
   def unpack(file, dir)
-    case archive_type(file)
-    in ArchiveType::Zip
-      unpack_zip(file, dir)
+    p =
+      case archive_type(file)
+      in ArchiveType::Zip
+        unpack_zip(file, dir)
+      in ArchiveType::Tarball
+        unpack_tarball(file, dir)
+      end
+
+    unless p.success?
+      raise "Unpacking #{file} failed with status code ${p.exit_status}"
     end
   end
 
   def unpack_zip(file, dir)
-    p = Process.run("unzip", [ "-d", dir, file ])
-    unless p.success?
-      raise "Unpacking #{file} failed with status code ${p.exit_status}"
-    end
+    Process.run("unzip", [ "-d", dir, file ])
+  end
+
+  def unpack_tarball(file, dir)
+    Process.run("tar", [ "-C", dir, "-xf", file ])
   end
 
   def format_glob(format : String, dir)
