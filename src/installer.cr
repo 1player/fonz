@@ -60,6 +60,13 @@ class Installer
     end
   end
 
+  def run_script(script, directory)
+    p = Process.run(script, shell: true, chdir: directory)
+    unless p.success?
+      raise "Installation script failed with status code: #{p.exit_status}"
+    end
+  end
+
   def install(recipe : Recipe)
     with_tempdir do |temp_dir|
       # 1. Download file
@@ -73,8 +80,8 @@ class Installer
       unpack(download_path, temp_dir)
 
       # 3. Run script
-      if recipe.script
-        raise "Script execution not implemented yet."
+      if script = recipe.script
+        run_script(script, temp_dir)
       end
 
       # 4. Collect files
