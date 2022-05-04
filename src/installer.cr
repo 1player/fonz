@@ -93,7 +93,7 @@ class Installer
       end
 
       # 5. Install files
-      dest_dir = Path.new(Utils.user_fonts_directory, "fancy", recipe.name)
+      dest_dir = Path.new(Utils.user_fonts_directory, recipe.name)
       Dir.mkdir_p(dest_dir) unless dry_run
 
       font_files.each do |file|

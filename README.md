@@ -8,3 +8,4 @@
 - [X] Handle .tar.gz archives
 - [X] Host the repository on a github project
 - [ ] Abort if font is already installed
+- [ ] Support URL sources
