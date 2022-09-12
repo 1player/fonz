@@ -104,20 +104,18 @@ class Installer
       Dir.mkdir_p(dest_dir) unless dry_run
 
       font_files.each do |file|
-        path = Path.new(file).relative_to?(temp_dir).not_nil!
-        dir_component = path.dirname
-        if dir_component
-          Dir.mkdir_p(Path.new(dest_dir, dir_component)) unless dry_run
-        end
-        dest_path = Path.new(dest_dir, path)
+        path = Path.new(file)
+        dest_path = Path.new(dest_dir, path.basename)
 
         puts "Installing #{dest_path}..."
         FileUtils.mv(file, dest_path) unless dry_run
       end
 
       # Update local database
-      font = InstalledFont.new(recipe.name, version)
-      LocalDatabase.instance.mark_font_as_installed(font)
+      unless dry_run
+        font = InstalledFont.new(recipe.name, version)
+        LocalDatabase.instance.mark_font_as_installed(font)
+      end
     end
   end
 end
