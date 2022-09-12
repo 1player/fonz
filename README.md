@@ -1,11 +1,13 @@
-# TODO
+# fonz
 
-- [X] Search a font by name
-- [X] github-release source implementation
-- [X] Install a font from YAML recipe
-- [X] Install a font by name
-- [X] Handle font installation script
-- [X] Handle .tar.gz archives
-- [X] Host the repository on a github project
-- [ ] Abort if font is already installed
-- [ ] Support URL sources
+A fancy font manager for Linux.
+
+## How to use
+
+* Search for a font: `fonz search <font name>`
+* Install a font: `fonz install <font name>`
+* List installed fonts: `fonz list`
+
+## How to contribute a new font
+
+Go here and follow the instructions in the Readme: https://github.com/1player/fonz-repo
