@@ -9,7 +9,7 @@ abstract class Source
 
   getter type : String
 
-  # abstract def download_url()
+  abstract def latest_release()
 end
 
 class GithubAPI
@@ -45,20 +45,23 @@ class GithubReleaseSource < Source
     end
   end
 
-  def download_url() : String?
-    if data = GithubAPI.new.latest_release(repo)
-      if @asset
-        # Download a specific asset
-        version = tag_name_to_version(data["tag_name"].to_s)
-        asset_name = asset_name(version)
-        data["assets"]
-          .as_a
-          .find { |asset| asset.as_h["name"] == asset_name }
-          .try { |asset| asset.as_h["browser_download_url"].as_s }
-      else
-        # Download tarball
-        data["tarball_url"].as_s
-      end
-    end
+  def latest_release() : {String, String}
+    data = GithubAPI.new.latest_release(repo).not_nil!
+
+    version = tag_name_to_version(data["tag_name"].to_s)
+
+    download_url = if @asset
+                     # Download a specific asset
+                     asset_name = asset_name(version)
+                     data["assets"]
+                       .as_a
+                       .find { |asset| asset.as_h["name"] == asset_name }
+                       .try { |asset| asset.as_h["browser_download_url"].as_s }
+                   else
+                     # Download tarball
+                     data["tarball_url"].as_s
+                   end
+
+    {download_url.not_nil!, version}
   end
 end

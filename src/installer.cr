@@ -4,8 +4,9 @@ require "mime"
 require "process"
 require "./recipe"
 require "./utils"
+require "./local_database"
 
-MIME.init()
+# MIME.init()
 
 class Installer
   enum ArchiveType
@@ -14,7 +15,7 @@ class Installer
   end
 
   def archive_type(filename)
-    if MIME.from_filename(filename) == "application/zip"
+    if filename =~ /\.zip$/
       ArchiveType::Zip
     elsif filename =~ /\.tar.\w+$/ || filename =~ /\.tgz$/
       ArchiveType::Tarball
@@ -70,7 +71,8 @@ class Installer
   def install(recipe : Recipe, *, dry_run = false)
     with_tempdir do |temp_dir|
       # 1. Download file
-      download_url = recipe.source.download_url().not_nil!
+      download_url, version = recipe.source.latest_release()
+      puts "Installing #{recipe.name} version #{version}..."
       puts "Downloading #{download_url} ..."
       download_path = Utils.download_file(download_url, temp_dir).not_nil!
       #puts "Saved as #{download_path}"
@@ -107,6 +109,9 @@ class Installer
         puts "Installing #{dest_path}..."
         FileUtils.mv(file, dest_path) unless dry_run
       end
+
+      # Update local database
+      LocalDatabase.instance.mark_font_as_installed(recipe.name, version)
     end
   end
 end
