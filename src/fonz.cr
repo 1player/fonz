@@ -43,7 +43,7 @@ end
 ##
 
 OptionParser.parse() do |parser|
-  parser.banner = "usage: fancy <command>\n"
+  parser.banner = "usage: fonz <command>\n"
   parser.on("-h", "--help", "Show this help") do
     STDERR.puts parser
     exit 1
@@ -55,9 +55,9 @@ OptionParser.parse() do |parser|
     dry_run = false
     parser.banner = <<-EOF
     usage:
-      fancy install <font name> [options]   - Install a font by name
+      fonz install <font name> [options]   - Install a font by name
       OR
-      fancy install <recipe.yaml> [options] - Install a font from YAML recipe
+      fonz install <recipe.yaml> [options] - Install a font from YAML recipe
 
     EOF
     parser.on("-n", "--dry-run", "Perform trial installation with no changes made") do
@@ -74,7 +74,7 @@ OptionParser.parse() do |parser|
     end
   end
   parser.on("search", "Search a font by name") do
-    parser.banner = "usage: fancy search <query> [options]\n"
+    parser.banner = "usage: fonz search <query> [options]\n"
     parser.unknown_args do |args, _|
       if args.size > 0
         query = args[0..].join(" ")

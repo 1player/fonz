@@ -2,7 +2,7 @@ require "http/client"
 
 module Utils
   def self.data_directory
-    Path.new(xdg_data_home(), "fancy")
+    Path.new(xdg_data_home(), "fonz")
   end
 
   def self.user_fonts_directory

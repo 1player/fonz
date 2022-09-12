@@ -2,7 +2,7 @@ require "time"
 require "./recipe"
 require "./utils"
 
-REPO_URL = "https://raw.githubusercontent.com/1player/fancy-repo/master/repo.yml"
+REPO_URL = "https://raw.githubusercontent.com/1player/fonz-repo/master/repo.yml"
 REPO_FILENAME = "repo.yml"
 REPO_PATH = Path.new(Utils.data_directory, REPO_FILENAME)
 

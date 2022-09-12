@@ -1,12 +1,12 @@
-name: fancy
+name: fonz
 version: 0.1.0
 
 authors:
   - Stéphane Travostino <steph@combo.cc>
 
 targets:
-  fancy:
-    main: src/fancy.cr
+  fonz:
+    main: src/fonz.cr
 
 crystal: 1.4.1
 

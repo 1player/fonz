@@ -1,6 +1,6 @@
 require "./spec_helper"
 
-describe Fancy do
+describe Fonz do
   # TODO: Write tests
 
   it "works" do
