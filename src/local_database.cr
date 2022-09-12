@@ -55,9 +55,18 @@ class LocalDatabase
     end
   end
 
-  def mark_font_as_installed(name, version)
-    @data.installed_fonts << InstalledFont.new(name, version)
+  def mark_font_as_installed(font : InstalledFont)
+    @data.installed_fonts << font
 
     save
+  end
+
+  def font_installed?(name)
+    @data.installed_fonts.any?{ |font| font.name == name }
+  end
+
+  def installed_version(name)
+    font = @data.installed_fonts.find { |font| font.name == name }
+    font.version || nil
   end
 end

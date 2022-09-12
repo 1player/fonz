@@ -69,13 +69,18 @@ class Installer
   end
 
   def install(recipe : Recipe, *, dry_run = false)
+    # Abort if font is already installed
+    if LocalDatabase.instance.font_installed?(recipe.name)
+      puts "#{recipe.name} is already installed."
+      return
+    end
+    
     with_tempdir do |temp_dir|
       # 1. Download file
       download_url, version = recipe.source.latest_release()
       puts "Installing #{recipe.name} version #{version}..."
       puts "Downloading #{download_url} ..."
       download_path = Utils.download_file(download_url, temp_dir).not_nil!
-      #puts "Saved as #{download_path}"
 
       # 2. Unpack
       puts "Unpacking #{download_path}..."
@@ -111,7 +116,8 @@ class Installer
       end
 
       # Update local database
-      LocalDatabase.instance.mark_font_as_installed(recipe.name, version)
+      font = InstalledFont.new(recipe.name, version)
+      LocalDatabase.instance.mark_font_as_installed(font)
     end
   end
 end
