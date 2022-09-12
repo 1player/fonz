@@ -40,6 +40,20 @@ private def search_command(query)
   end
 end
 
+private def list_command()
+  installed_fonts = LocalDatabase.instance.installed_fonts
+
+  if installed_fonts.size < 1
+    puts "No fonts installed."
+    return
+  end
+
+  printf "%-40s\t%10s\n", "name", "version"
+  installed_fonts.each do |font|
+    printf "%-40s\t%10s\n", font.name, font.version
+  end
+end
+
 ##
 
 OptionParser.parse() do |parser|
@@ -84,6 +98,11 @@ OptionParser.parse() do |parser|
         exit 1
       end
     end
+  end
+  parser.on("list", "List installed fonts") do
+    parser.banner = "usage: font list\n"
+    list_command()
+    exit 1
   end
   parser.unknown_args do |args, _|
     STDERR.puts parser

@@ -69,4 +69,8 @@ class LocalDatabase
     font = @data.installed_fonts.find { |font| font.name == name }
     font.version || nil
   end
+
+  def installed_fonts()
+    @data.installed_fonts
+  end
 end
