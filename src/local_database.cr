@@ -1,6 +1,8 @@
 require "yaml"
 require "./utils"
 
+DATABASE_VERSION = 20220912_u32
+
 class InstalledFont
   include YAML::Serializable
 
@@ -16,9 +18,11 @@ end
 class Database
   include YAML::Serializable
 
+  property database_version : UInt32
   property installed_fonts : Array(InstalledFont)
 
   def initialize()
+    @database_version = DATABASE_VERSION
     @installed_fonts = [] of InstalledFont
   end
 end
