@@ -1,4 +1,4 @@
-name: Crystal CI
+name: Build release
 
 on:
   release:
@@ -22,7 +22,7 @@ jobs:
     - name: Build binary
       run: |
         mkdir _build
-        crystal build -o "_build/fonz.${{ needs.create_release.outputs.version }}.x86_64" src/fonz.cr
+        crystal build -o "_build/fonz.linux.x86_64" src/fonz.cr
     - name: Upload the artifacts
       uses: skx/github-action-publish-binaries@release-1.3
       env:
