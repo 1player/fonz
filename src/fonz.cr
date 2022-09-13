@@ -100,7 +100,7 @@ OptionParser.parse() do |parser|
     end
   end
   parser.on("list", "List installed fonts") do
-    parser.banner = "usage: font list\n"
+    parser.banner = "usage: fonz list\n"
     list_command()
     exit 1
   end
