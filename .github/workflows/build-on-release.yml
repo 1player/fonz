@@ -1,0 +1,32 @@
+name: Crystal CI
+
+on:
+  release:
+    types: [created]
+    
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    container:
+      image: crystallang/crystal
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: shards install
+    - name: Build binary
+      run: |
+        mkdir _build
+        crystal build -o "_build/fonz.${{ needs.create_release.outputs.version }}.x86_64" src/fonz.cr
+    - name: Upload the artifacts
+      uses: skx/github-action-publish-binaries@release-1.3
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        releaseId: ${{ needs.create_release.outputs.id }}
+        args: _build/*
