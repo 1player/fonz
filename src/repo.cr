@@ -27,6 +27,12 @@ class Repo
     end
   end
 
+  def self.deserialize(path)
+    File.open(path) do |file|
+      Array(Recipe).from_yaml(file)
+    end
+  end
+
   def self.refresh
     puts "Refreshing font repository..."
     Dir.mkdir_p(Utils.data_directory)
@@ -34,9 +40,7 @@ class Repo
   end
 
   def load
-    @recipes = File.open(REPO_PATH) do |file|
-      Array(Recipe).from_yaml(file)
-    end
+    @recipes = Repo.deserialize(REPO_PATH)
   end
 
   def search(query)

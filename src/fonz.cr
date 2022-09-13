@@ -7,9 +7,7 @@ private def install_command(name, *, dry_run = false)
   recipe =
     if name =~ %r(/)
       if File.exists?(name)
-        File.open(name) do |file|
-          Recipe.from_yaml(file)
-        end
+        Recipe.deserialize(name)
       else
         puts "#{name}: No such file or directory."
         exit 1
@@ -54,6 +52,21 @@ private def list_command()
   end
 end
 
+private def validate_command(filename, typ)
+  begin
+    if typ == :recipe
+      Recipe.deserialize(filename)
+    elsif typ == :repo
+      Repo.deserialize(filename)
+    end
+  rescue ex
+    puts "Validation failed: #{ex}"
+    exit 1
+  end
+
+  puts "OK"
+end
+
 ##
 
 OptionParser.parse() do |parser|
@@ -71,7 +84,7 @@ OptionParser.parse() do |parser|
     usage:
       fonz install <font name> [options]   - Install a font by name
       OR
-      fonz install <recipe.yaml> [options] - Install a font from YAML recipe
+      fonz install <recipe.yml> [options]  - Install a font from YAML recipe
 
     EOF
     parser.on("-n", "--dry-run", "Perform trial installation with no changes made") do
@@ -103,6 +116,28 @@ OptionParser.parse() do |parser|
     parser.banner = "usage: fonz list\n"
     list_command()
     exit 1
+  end
+  parser.on("validate", "Validate recipe file") do
+    parser.banner = "usage: fonz validate <recipe.yml>\n"
+    parser.unknown_args do |args, _|
+      if args.size > 0
+        validate_command(args[0], :recipe)
+      else
+        STDERR.puts parser
+        exit 1
+      end
+    end
+  end
+  parser.on("validate-repo", "Validate repo file") do
+    parser.banner = "usage: fonz validate-repo <repo.yml>\n"
+    parser.unknown_args do |args, _|
+      if args.size > 0
+        validate_command(args[0], :repo)
+      else
+        STDERR.puts parser
+        exit 1
+      end
+    end
   end
   parser.unknown_args do |args, _|
     STDERR.puts parser
